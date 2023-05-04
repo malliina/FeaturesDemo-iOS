@@ -6,26 +6,12 @@ struct SimpleEntry: TimelineEntry {
     let imageData: Data?
 }
 
-struct Provider: TimelineProvider {
+struct Provider: AsyncTimelineProvider {
     let log = LoggerFactory.shared.system(Provider.self)
     
     func placeholder(in context: Context) -> SimpleEntry {
         log.info("Get placeholder")
         return SimpleEntry(date: Date(), imageData: nil)
-    }
-
-    func getSnapshot(in context: Context, completion: @escaping (SimpleEntry) -> ()) {
-        log.info("Get snapshot")
-        Task {
-            completion(await snapshot(in: context))
-        }
-    }
-
-    func getTimeline(in context: Context, completion: @escaping (Timeline<Entry>) -> ()) {
-        log.info("Get timeline")
-        Task {
-            completion(await timeline(in: context))
-        }
     }
     
     func snapshot(in context: Context) async -> SimpleEntry {
@@ -60,21 +46,39 @@ struct Provider: TimelineProvider {
     }
 }
 
-struct StaticExtensionEntryView : View {
-    var entry: Provider.Entry
+extension WidgetFamily {
+    // https://developer.apple.com/documentation/widgetkit/creating-a-widget-extension#Respond-to-user-interactions
+    var supportsLink: Bool {
+        [.systemMedium, .systemLarge, .systemExtraLarge].contains(self)
+    }
+}
 
+struct StaticExtensionEntryView : View {
+    @Environment(\.widgetFamily) var family: WidgetFamily
+    
+    var entry: Provider.Entry
+    
     var body: some View {
         Group {
             if let imageData = entry.imageData,
                let uiImage = UIImage(data: imageData) {
-                Image(uiImage: uiImage)
-                    .resizable()
-                    .aspectRatio(contentMode: .fill)
+                VStack {
+                    Image(uiImage: uiImage)
+                        .resizable()
+                        .aspectRatio(contentMode: .fill)
+                    if family.supportsLink {
+                        Link(destination: FeatureConstants.shared.widgetLink) {
+                            Text("Text link here")
+                        }
+                        .padding()
+                    }
+                }
             }
             else {
                 Text("Text this time!")
             }
-        }.widgetURL(FeatureConstants.shared.widgetUrl)
+        }
+        .widgetURL(FeatureConstants.shared.widgetUrl)
     }
 }
 

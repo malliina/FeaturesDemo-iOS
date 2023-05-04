@@ -2,7 +2,7 @@ import ActivityKit
 import WidgetKit
 import SwiftUI
 
-struct DemoWidgetAttributes: ActivityAttributes {
+struct LiveActivityDemoAttributes: ActivityAttributes {
     public struct ContentState: Codable, Hashable {
         // Dynamic stateful properties about your activity go here!
         var value: Int
@@ -12,9 +12,9 @@ struct DemoWidgetAttributes: ActivityAttributes {
     var name: String
 }
 
-struct DemoWidgetLiveActivity: Widget {
+struct LiveActivityDemoLiveActivity: Widget {
     var body: some WidgetConfiguration {
-        ActivityConfiguration(for: DemoWidgetAttributes.self) { context in
+        ActivityConfiguration(for: LiveActivityDemoAttributes.self) { context in
             // Lock screen/banner UI goes here
             VStack {
                 Text("Hello")
@@ -43,15 +43,15 @@ struct DemoWidgetLiveActivity: Widget {
             } minimal: {
                 Text("Min")
             }
-            .widgetURL(URL(string: "https://www.apple.com"))
+            .widgetURL(URL(string: "http://www.apple.com"))
             .keylineTint(Color.red)
         }
     }
 }
 
-struct DemoWidgetLiveActivity_Previews: PreviewProvider {
-    static let attributes = DemoWidgetAttributes(name: "Me")
-    static let contentState = DemoWidgetAttributes.ContentState(value: 3)
+struct LiveActivityDemoLiveActivity_Previews: PreviewProvider {
+    static let attributes = LiveActivityDemoAttributes(name: "Me")
+    static let contentState = LiveActivityDemoAttributes.ContentState(value: 3)
 
     static var previews: some View {
         attributes
