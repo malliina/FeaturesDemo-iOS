@@ -17,7 +17,7 @@ class Activities {
             let activity = try Activity.request(attributes: attrs, content: content)
             activeActivity = activity
             await observeState(activity: activity)
-            log.info("Started live activity")
+            log.info("Started live activity.")
         } else {
             log.info("Live activities are disabled.")
         }
