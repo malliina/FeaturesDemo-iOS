@@ -17,7 +17,7 @@ struct DemoWidgetLiveActivity: Widget {
         ActivityConfiguration(for: DemoWidgetAttributes.self) { context in
             // Lock screen/banner UI goes here
             VStack {
-                Text("Hello")
+                Text("Hello!")
             }
             .activityBackgroundTint(Color.cyan)
             .activitySystemActionForegroundColor(Color.black)
